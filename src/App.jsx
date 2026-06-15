@@ -18,7 +18,7 @@ export default function App() {
           <Route path="/informasi"     element={<Information />} />
           <Route path="/berita"        element={<SeputarHimmah />} />
           <Route path="/berita/:id"    element={<SeputarHimmah />} />
-          <Route path="/admin"         element={<Admin />} />
+          <Route path="/admin"  element={<Admin />} />
           <Route path="*"              element={<NotFound />} />
         </Routes>
       </main>

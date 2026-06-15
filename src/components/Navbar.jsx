@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, Info, Newspaper, UserCog } from 'lucide-react';
+import { Menu, X, Home, Info, Newspaper } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export default function Navbar() {
@@ -12,7 +12,6 @@ export default function Navbar() {
     { path: '/', label: 'Beranda', icon: <Home size={18} /> },
     { path: '/informasi', label: 'Informasi', icon: <Info size={18} /> },
     { path: '/berita', label: 'Seputar HIMMAH', icon: <Newspaper size={18} /> },
-    { path: '/admin', label: 'Admin', icon: <UserCog size={18} /> },
   ];
 
   const isActive = (path) => location.pathname === path;
