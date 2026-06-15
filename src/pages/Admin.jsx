@@ -170,11 +170,13 @@ function getCroppedImg(imageSrc, pixelCrop) {
 
 // ---------- KOMPONEN ADMIN ----------
 export default function Admin() {
-  const { isLoggedIn, login, logout, berita, saveBerita, divisi, saveDivisi, bannerImages, saveBanner, logo, saveLogo, pengurus, savePengurus } = useApp();
+  const { isLoggedIn, login, logout, berita, saveBerita, divisi, saveDivisi, bannerImages, saveBanner, logo, saveLogo, pengurus, savePengurus, sambutanKetua, saveSambutan } = useApp();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [editSambutan, setEditSambutan] = useState(false);
+  const [draftSambutan, setDraftSambutan] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isUploading, setIsUploading] = useState(false);
 
@@ -208,11 +210,15 @@ export default function Admin() {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const onCropComplete = useCallback((_, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels), []);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const found = adminAccounts.find(a => a.username === username && a.password === password);
-    if (found) { login(); setLoginError(''); }
-    else setLoginError('Username atau password salah!');
+    setLoginError('Memeriksa...');
+    const result = await login(username, password);
+    if (result.success) {
+      setLoginError('');
+    } else {
+      setLoginError(result.message || 'Username atau password salah!');
+    }
   };
 
   if (!isLoggedIn) {
@@ -534,6 +540,42 @@ export default function Admin() {
                   </div>
                   <div className="border-t border-green-900/30 pt-4"><button onClick={handleResetLogo} className="px-4 py-2 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 flex items-center gap-2 text-sm"><Trash2 size={16} /> Reset ke Logo Default</button></div>
                 </div>
+              </div>
+            )}
+
+            {/* ========== SAMBUTAN KETUA ========== */}
+            {activeTab === 'pengurus' && (
+              <div className="space-y-4 mb-8 bg-[#111a11] border border-green-900/30 rounded-2xl p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-white font-semibold text-lg">Sambutan Ketua</h3>
+                  {!editSambutan ? (
+                    <button onClick={() => { setDraftSambutan(sambutanKetua); setEditSambutan(true); }}
+                      className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm">
+                      Edit
+                    </button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button onClick={() => { saveSambutan(draftSambutan); setEditSambutan(false); }}
+                        className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm">
+                        Simpan
+                      </button>
+                      <button onClick={() => setEditSambutan(false)}
+                        className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm">
+                        Batal
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {editSambutan ? (
+                  <textarea
+                    value={draftSambutan}
+                    onChange={(e) => setDraftSambutan(e.target.value)}
+                    rows={5}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm resize-none focus:outline-none focus:border-green-400"
+                  />
+                ) : (
+                  <p className="text-green-100/70 text-sm leading-relaxed">"{sambutanKetua}"</p>
+                )}
               </div>
             )}
 
